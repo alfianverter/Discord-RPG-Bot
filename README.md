@@ -6,4 +6,6 @@ Our prefix is "##".
 Starts the game.
 # attack
 When in a game, this will attack the enemy.
+# heal
+Command not done yet, expect some glitches with it.
 # More to come!
