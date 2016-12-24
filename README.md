@@ -8,8 +8,10 @@ Starts the game.
 When in a game, this will attack the enemy.
 # heal
 Command not done yet, expect some glitches with it.
-# fireball (90% miss chance)
-Shoots a fireball that does no damage, but every round the enemy loses 5 HP after you shoot it. Stacks now!
+# fireball (10% miss chance)
+Shoots a fireball that does no damage, but every round the enemy loses 5 HP after you shoot it. It does stack. Uses 5 mana. 
 # shield
-Blocks all but 0.5 damage from the enemy. At the moment this can be used with Fireball to cheese.
+Blocks all but 0.5 damage from the enemy. Has a one round cooldown.
+# leech
+Leeches the enemy, stealing some of their HP and giving it to you.
 # More to come!
