@@ -33,21 +33,33 @@ bot.on('message', (msg) => {
 //Starts the game and sets the stats.
 if(input === prefix + "start" && isPlaying == false) {
   //Here is the enemy creation framework.
-  stats.enemies = ['Titan', 'Slime', 'Demon']
-    stats.enemy = stats.enemies[Math.floor(Math.random() * 4)]
+  stats.enemies = ['Titan', 'Green Slime', 'Demon', 'Mage', 'Blue Slime', 'Red Slime']
+    stats.enemy = stats.enemies[Math.floor(Math.random() * stats.enemies.length)]
     //Copy this IF statement and add your enemy to the stats.enemies array, then change Slime to your new enemy.
     //stats.HP is how much health the new enemy will have, and attackMul is multiplies the damage by your number.
-  if(stats.enemy == 'Slime') {
+  if(stats.enemy == 'Green Slime') {
     stats.attackMul = 1.0
-      stats.HP = 50
+      stats.HP = 30
+  }
+  if(stats.enemy == 'Blue Slime') {
+    stats.attackMul = 1.25
+      stats.HP = 35
+  }
+  if(stats.enemy == 'Red Slime') {
+    stats.attackMul = 1.50
+      stats.HP = 40
   }
   if(stats.enemy == 'Titan') {
     stats.attackMul = 0.5
       stats.HP = 80
   }
   if(stats.enemy == 'Demon') {
-    stats.attackMul = 2.0
+    stats.attackMul = 2.5
       stats.HP = 35
+  }
+  if(stats.enemy == 'Mage') {
+    stats.attackMul = 3.0
+      stats.HP = 25
   }
 
   round = round + 1
@@ -56,9 +68,9 @@ if(input === prefix + "start" && isPlaying == false) {
   stats.plrHP = 40
   stats.maxHP = stats.plrHP
   stats.Mana = 50
-
+stats.fireUsed = 0
   stats.onFire = false
-  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball?')
+  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball? Shield?')
 }
 
 //Attacks the foe.
@@ -71,15 +83,17 @@ stats.plrHP = stats.plrHP - attackDmg
   msg.channel.sendMessage('Ouch! The ' + stats.enemy + ' hit you for ' + attackDmg + ' damage.')
   round = round + 1
   if(stats.onFire == true && isPlaying == true) {
-    msg.channel.sendMessage('The foe is on fire and lost 2 hitpoints!')
-    stats.HP = stats.HP - 2
+    stats.toTakeAway = 5 * stats.fireUsed
+stats.HP = stats.HP - stats.toTakeAway
+
+msg.channel.sendMessage('The foe is on fire and lost ' + stats.toTakeAway + ' hitpoints!')
   }
-  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball?')
+  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball? Shield?')
 }
 
 //If you say "heal" and you have enough Mana this code will execute.
 if(input === "heal" && isPlaying == true && stats.Mana > 24) {
-  var heal = Math.floor(Math.random() * 13) + 1
+  var heal = Math.floor(Math.random() * 13) + 6
   stats.test = heal + stats.plrHP
   stats.plrHP = stats.plrHP + heal
   stats.Mana = stats.Mana - 25
@@ -87,11 +101,12 @@ if(input === "heal" && isPlaying == true && stats.Mana > 24) {
   msg.channel.sendMessage('The foe didn\'t attack.')
   round = round + 1
   if(stats.onFire == true && isPlaying == true) {
-    msg.channel.sendMessage('The foe is on fire and lost 2 hitpoints!')
-    stats.HP = stats.HP - 2
-  }
-  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball?')
+    stats.toTakeAway = 5 * stats.fireUsed
+stats.HP = stats.HP - stats.toTakeAway
 
+msg.channel.sendMessage('The foe is on fire and lost ' + stats.toTakeAway + ' hitpoints!')
+  }
+  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball? Shield?')
 }
 //If you dont have enough mana this triggers.
 if(input === "heal" && isPlaying == true && stats.Mana < 25) {
@@ -99,7 +114,7 @@ msg.channel.sendMessage('You don\'t have enough Mana!')
 }
 if(input === "fireball" && isPlaying == true && stats.Mana > 5) {
   var attackDmg = Math.floor(Math.random() * 6) + 2
-
+stats.fireUsed = stats.fireUsed + 1
   stats.Mana = stats.Mana - 3
   msg.channel.sendMessage('You shot a fireball at the enemy and used 5 mana.')
   stats.onFire = true
@@ -108,10 +123,12 @@ if(input === "fireball" && isPlaying == true && stats.Mana > 5) {
   msg.channel.sendMessage('Ouch! The ' + stats.enemy + ' hit you for ' + attackDmg + ' damage.')
   round = round + 1
   if(stats.onFire == true && isPlaying == true) {
-    msg.channel.sendMessage('The foe is on fire and lost 2 hitpoints!')
-    stats.HP = stats.HP - 5
+    stats.toTakeAway = 5 * stats.fireUsed
+stats.HP = stats.HP - stats.toTakeAway
+
+msg.channel.sendMessage('The foe is on fire and lost ' + stats.toTakeAway + ' hitpoints!')
   }
-  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball?')
+  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball? Shield?')
 
 
 
@@ -122,7 +139,26 @@ if(input === "fireball" && isPlaying == true && stats.Mana > 5) {
 if(input === "fireball" && isPlaying == true && stats.Mana < 5) {
 msg.channel.sendMessage('You don\'t have enough Mana!')
 }
+if(input === "shield" && isPlaying == true && stats.Mana > 5) {
 
+  msg.channel.sendMessage('You blocked the incoming attack.')
+  attackDmg = 0.5
+  stats.plrHP = stats.plrHP - attackDmg
+  msg.channel.sendMessage('The shield blocked most of the damage from the ' + stats.enemy + ' but you still lost ' + attackDmg + ' HP.')
+  round = round + 1
+  if(stats.onFire == true && isPlaying == true) {
+                stats.toTakeAway = 5 * stats.fireUsed
+        stats.HP = stats.HP - stats.toTakeAway
+
+    msg.channel.sendMessage('The foe is on fire and lost ' + stats.toTakeAway + ' hitpoints!')
+
+
+  }
+  msg.channel.sendMessage(stats.enemy + '\'s HP: ' + stats.HP + '\nYour HP: ' + stats.plrHP + '\nYour Mana ' + stats.Mana + '\nAttack? Heal? Fireball? Shield?')
+
+
+
+}
 
 
 //Evaluation command, if you self-hosting this bot replace my user id with yours.
